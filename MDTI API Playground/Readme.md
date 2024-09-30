@@ -8,9 +8,6 @@ Welcome to the **MDTI API Playground**! This repository contains a Jupyter noteb
 2. Getting Started
 3. Installation
 4. Usage
-5. Examples
-6. Contributing
-7. License
 
 ## Introduction
 
