@@ -32,9 +32,9 @@ async def main_function(req: func.HttpRequest) -> func.HttpResponse:
     return func.HttpResponse(json.dumps(combined_results), status_code=200)
 
 #MDTI INFO
-client_id = "<CLIENT_ID>"
-client_secret = "<CLIENT_SECRET>"
-tenant_id = "<TENANT_ID"
+client_id = "<MDTI_CLIENT_ID>"
+client_secret = "<MDTI_CLIENT_SECRET>"
+tenant_id = "<MDTI_TENANT_ID>"
 
 def get_access_token(client_id, client_secret, tenant_id):
     url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"
