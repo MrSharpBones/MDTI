@@ -24,7 +24,9 @@ The MDTI Actor Lookup project leverages the MDTI API, a function app, and a logi
 
 ## Getting Started
 
-To get started with the MDTI Actor Lookup project, you'll need to have an Azure account and the necessary permissions to deploy resources.
+To get started with the MDTI Actor Lookup project, you'll need to have an Azure account and the necessary permissions to deploy resources.  Also this playbook will use Copilot for Security to provide threat actor summaries, so you'll need to have at least 1 SCU configured in your tenant.  The MDTI API is a licensed feature, if you do not have the license please reach out to your account representative for purchase info and/or trial assistance.
+
+You can however just use the MDTI API and the function app and hook them into whichever system you'd like.  You'll lose the SOAR functionality but you'll stil get the benefit of lightning fast infra chaining.
 
 ## Deployment
 
@@ -32,7 +34,7 @@ Follow these steps to deploy the application to Azure:
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/yourusername/mdti-actor-lookup.git
+    git clone https://github.com/MrSharpBones/mdti-actor-lookup.git
     ```
 2. **Navigate to the project directory**:
     ```bash
@@ -44,7 +46,7 @@ Follow these steps to deploy the application to Azure:
 
 ## Usage
 
-Once deployed, the application will automatically start processing and chaining threat infrastructure data. You can monitor and manage the application through the Azure portal.
+Once deployed, you can attach the playbook to any/all Sentinel playbooks, Copilot will only be invoked should an actor group show up on in the results.  The MDTI API allows for unlimited (but throttled) API queries, so you can use this as much as you want without the worry of overage fees.
 
 ## Contributing
 
