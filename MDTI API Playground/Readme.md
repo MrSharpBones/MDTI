@@ -30,7 +30,7 @@ To get started with the MDTI API Playground, you'll need to have Python and Jupy
     ```bash
     cd mdti-api-playground
     ```
-3. Install the required dependencies:
+3. Install the required dependencies (may want to do this in your notebook as it will spawn a venv):
     ```bash
     pip install -r requirements.txt
     ```
