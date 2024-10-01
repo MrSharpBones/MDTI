@@ -26,18 +26,6 @@
     },
     "variables": {},
     "resources": [
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2021-04-01",
-      "name": "nestedTemplate",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "https://raw.githubusercontent.com/MrSharpBones/MDTI/main/MDTI%20Actor%20Lookup/azuredeploy.json",
-          "contentVersion": "1.0.0.0"
-        }
-        }
-    },
         {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2023-12-01",
