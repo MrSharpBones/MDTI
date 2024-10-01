@@ -44,7 +44,7 @@ Follow these steps to deploy the application to Azure:
     - Use the Azure portal or Azure CLI to deploy the function app and logic app.
     - Assign the necessary names and configurations as per your requirements.
 
-!azuredeploy
+!Deploy to Azure
 
 ## Usage
 
