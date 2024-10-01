@@ -27,6 +27,16 @@
     "variables": {},
     "resources": [
         {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2021-04-01",
+      "name": "nestedTemplate",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/<your-username>/<your-repo>/main/templates/azuredeploy.json",
+          "contentVersion": "1.0.0.0"
+        },
+        {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2023-12-01",
             "name": "[parameters('sites_MDTI_Lookup_name')]",
