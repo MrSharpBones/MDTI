@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2021-04-01",
+      "name": "nestedTemplate",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/MrSharpBones/MDTI/main/MDTI%20Actor%20Lookup/azuredeploy.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "sites_MDTI_Lookup_name": {
+            "value": "[parameters('sites_MDTI_Lookup_name')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "hostName": {
+            "value": "[parameters('hostName')]"
+          },
+          "clientId": {
+            "value": "[parameters('clientId')]"
+          },
+          "clientSecret": {
+            "value": "[parameters('clientSecret')]"
+          },
+          "tenantId": {
+            "value": "[parameters('tenantId')]"
+          }
+        }
+      }
+    }
+  ]
+}
