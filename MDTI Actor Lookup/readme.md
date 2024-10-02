@@ -44,7 +44,7 @@ Follow these steps to deploy the application to Azure:
     - Use the Azure portal or Azure CLI to deploy the function app and logic app.
     - Assign the necessary names and configurations as per your requirements.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/MrSharpBones/MDTI/refs/heads/main/MDTI%20Actor%20Lookup/deploy-to-azure.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https%3A%2F%2portal.azure.com%2#create%2Microsoft.Template%2uri%2https%3A%2F%2raw.githubusercontent.com%2MrSharpBones%2MDTI%2refs%2heads%2main%2MDTI%20Actor%20Lookup%2deploy-to-azure.json)
 
 ## Usage
 
