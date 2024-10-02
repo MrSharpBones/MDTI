@@ -1,6 +1,26 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
+  "parameters": {
+    "sites_MDTI_Lookup_name": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "hostName": {
+      "type": "string"
+    },
+    "clientId": {
+      "type": "string"
+    },
+    "clientSecret": {
+      "type": "string"
+    },
+    "tenantId": {
+      "type": "string"
+    }
+  },
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
