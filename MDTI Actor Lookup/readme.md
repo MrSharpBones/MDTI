@@ -21,8 +21,8 @@ The MDTI Actor Lookup project leverages the MDTI API, a function app, and a logi
 - A Copilot for Security SCU or as many as the organization requires.
 
 - **Deploying the MDTI API** - https://review.learn.microsoft.com/en-us/graph/api/resources/security-threatintelligence-overview?branch=main&branchFallbackFrom=pr-en-us-21547&view=graph-rest-1.0
-**Choosing a Function Apps plan** - https://learn.microsoft.com/en-us/azure/azure-functions/functions-scale
-**Deploy Copilot SCUs** - https://learn.microsoft.com/en-us/copilot/security/get-started-security-copilot
+- **Choosing a Function Apps plan** - https://learn.microsoft.com/en-us/azure/azure-functions/functions-scale
+- **Deploy Copilot SCUs** - https://learn.microsoft.com/en-us/copilot/security/get-started-security-copilot
 
 Seems like a lot right?  But most of these items are deployed within your environment if you're an existing Sentinel customer.
 
