@@ -62,6 +62,10 @@ Follow these steps to deploy the application to Azure:
 5. There are some parameters you need to replace within the function_app.py code, they're within the <> symbols for convienience.
 6. Once deployed you'll have generated the keys within the app, to access your app simply browse the url which will look something like https://sitename.azurewebsites.net/api/functionappname?code=<yourfunctionkey>&item=<IOC>
 
+## Deployment of the Logic App
+
+
+
 ## Usage
 
 Once deployed, you can attach the playbook to any/all Sentinel playbooks, Copilot will only be invoked should an actor group show up on in the results.  The MDTI API allows for unlimited (but throttled) API queries, so you can use this as much as you want without the worry of overage fees.
