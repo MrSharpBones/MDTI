@@ -39,6 +39,10 @@ Seems like a lot right?  But most of these items are deployed within your enviro
 3. Copilot will write out a comment for each group containing a detailed summary of the group as well as look at Threat Analytics (for MDE customers) to show affected machines based on known vulnerabilities
 4. The incident will be changed to high severity and Active status.  Also the LA will add tags of the actor group name to the incident
 
+## Why did you make this?
+
+Good question!  Organizations struggle to operationalize threat intel, meaning how do they take the wealth of knowledge provided by a solution like MDTI and automate it into their business processes?  It's not easy to develop scripts and automations while putting out fires all over the place so I wanted to create something that defenders could use in the background all day long that did the heavy lifting of infrastructure chaining.  The aim of this project is to allow defenders to operationlize TI within minutes instead of hours/days/weeks/never and provide a solution that ensures higher fidelity of alerts than just ingestings a STIX/TAXII feed.
+
 ## Features
 
 - **Automated Threat Infrastructure Chaining**: Streamlines the process of identifying and linking threat actors.
