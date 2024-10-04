@@ -70,10 +70,6 @@ Follow these steps to deploy the application to Azure:
 
 Once deployed, you can attach the playbook to any/all Sentinel playbooks, Copilot will only be invoked should an actor group show up on in the results.  The MDTI API allows for unlimited (but throttled) API queries, so you can use this as much as you want without the worry of overage fees.
 
-## Contributing
-
-We welcome contributions to the MDTI Actor Lookup project! If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
-
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for more details.
