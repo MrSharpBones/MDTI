@@ -42,17 +42,6 @@
         "description": "Location for Application Insights"
       }
     },
-    "functionWorkerRuntime": {
-      "type": "string",
-      "defaultValue": "node",
-      "allowedValues": [
-        "python"
-        
-      ],
-      "metadata": {
-        "description": "The language worker runtime to load in the function app."
-      }
-    },
     "linuxFxVersion": {
       "type": "string",
       "defaultValue": "python|3.10",
@@ -146,7 +135,7 @@
             },
             {
               "name": "FUNCTIONS_WORKER_RUNTIME",
-              "value": "[parameters('functionWorkerRuntime')]"
+              "value": "python"
             },
             {
               "name": "WEBSITE_RUN_FROM_PACKAGE",
