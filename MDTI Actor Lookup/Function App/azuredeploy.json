@@ -11,7 +11,7 @@
   "parameters": {
     "functionAppName": {
       "type": "string",
-      "defaultValue": "[format('func-{0}', uniqueString(resourceGroup().id))]",
+      "defaultValue": "Name of your app",
       "metadata": {
         "description": "The name of the Azure Function app."
       }
@@ -37,7 +37,7 @@
     },
     "deployToProduction": {
       "type": "bool",
-      "defaultValue": true
+      "defaultValue": false
     },
     "appInsightsLocation": {
       "type": "string",
@@ -51,13 +51,6 @@
       "defaultValue": "python|3.10",
       "metadata": {
         "description": "Required for Linux app to represent runtime stack in the format of 'runtime|runtimeVersion'. For example: 'python|3.10'"
-      }
-    },
-    "packageUri": {
-      "type": "string",
-      "defaultValue": "https://github.com/MrSharpBones/MDTI/raw/refs/heads/main/MDTI%20Actor%20Lookup/Function%20App/funcapp.zip",
-      "metadata": {
-        "description": "The zip content url."
       }
     }
   },
@@ -107,7 +100,7 @@
     },
     {
       "type": "Microsoft.Web/sites",
-      "apiVersion": "2020-02-02",
+      "apiVersion": "2022-03-01",
       "name": "[parameters('functionAppName')]",
       "location": "[parameters('location')]",
       "kind": "functionapp,linux",
@@ -156,7 +149,7 @@
       "apiVersion": "2021-02-01",
       "name": "[format('{0}/ZipDeploy', variables('applicationInsightsName'))]",
       "properties": {
-        "packageUri": "[parameters('packageUri')]",
+        "packageUri": "https://github.com/MrSharpBones/MDTI/raw/refs/heads/main/MDTI%20Actor%20Lookup/Function%20App/funcapp.zip",
         "appOffline": true
       }
     }
