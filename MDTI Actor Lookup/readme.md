@@ -59,12 +59,9 @@ You can however just use the MDTI API and the function app and hook them into wh
 
 Follow these steps to deploy the application to Azure:
 
-1. Deploy a new python based function app
-2. Gather your API information for MDTI
-3. Create a new HTTP trigger within your function app
-4. You can edit the file directly in the portal but I would recommend that you use VSCode to work with the files as there exists no way to commit the requirements.txt and other files via the UI.  https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=node-v4%2Cpython-v2%2Cisolated-process%2Cquick-create&pivots=programming-language-python
-5. There are some parameters you need to replace within the function_app.py code, they're within the <> symbols for convienience.
-6. Once deployed you'll have generated the keys within the app, to access your app simply browse the url which will look something like https://sitename.azurewebsites.net/api/functionappname?code=<yourfunctionkey>&item=<IOC>
+1. Deploy using the button below.
+2. Choose your regions for app services deployment, you might encounter an error with the API version (different regions support different versions), if so correct in the template and redeploy.
+3. The files will be deployed but some settings in function_app.py will remain so you will need to edit the file. Fill in your client id, secret and tenant info and away you go.
 
 ## Deployment of the Logic App
 
