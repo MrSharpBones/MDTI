@@ -23,8 +23,10 @@ Before you begin, ensure you have the following:
 
 ## Getting Started
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMrSharpBones%2FMDTI%2FMDTI%20Actor%20Lookup%2FLogic%20App%2Fazuredeploy.json" target="_blank">
-    <img src="https://aka.ms/deploytoazurebutton"/>
+<a href="
+https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMrSharpBones%2FMDTI%2Frefs%2Fheads%2Fmain%2FMDTI%2520Actor%2520Lookup%2FLogic%2520App%2Fazuredeploy.json"
+target="_blank">
+<img src="
+https://aka.ms/deploytoazurebutton"/>
 </a>
-
 
