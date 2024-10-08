@@ -35,6 +35,10 @@
         "description": "Location for all resources."
       }
     },
+    "deployToProduction": {
+      "type": "bool",
+      "defaultValue": true
+    },
     "appInsightsLocation": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
@@ -136,10 +140,6 @@
             {
               "name": "FUNCTIONS_WORKER_RUNTIME",
               "value": "python"
-            },
-            {
-              "name": "WEBSITE_RUN_FROM_PACKAGE",
-              "value": "[parameters('packageUri')]"
             }
           ]
         }
@@ -149,6 +149,16 @@
         "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
       ]
+    },
+    {
+      "condition": "[parameters('deployToProduction')]",
+      "type": "Microsoft.Web/sites/extensions",
+      "apiVersion": "2021-02-01",
+      "name": "[format('{0}/ZipDeploy', variables('applicationInsightsName'))]",
+      "properties": {
+        "packageUri": "[parameters('packageUri')]",
+        "appOffline": true
+      }
     }
   ]
 }
