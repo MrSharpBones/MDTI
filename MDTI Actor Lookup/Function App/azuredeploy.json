@@ -46,10 +46,8 @@
       "type": "string",
       "defaultValue": "node",
       "allowedValues": [
-        "dotnet",
-        "node",
-        "python",
-        "java"
+        "python"
+        
       ],
       "metadata": {
         "description": "The language worker runtime to load in the function app."
@@ -57,13 +55,14 @@
     },
     "linuxFxVersion": {
       "type": "string",
+      "defaultValue": "python|3.10",
       "metadata": {
-        "description": "Required for Linux app to represent runtime stack in the format of 'runtime|runtimeVersion'. For example: 'python|3.9'"
+        "description": "Required for Linux app to represent runtime stack in the format of 'runtime|runtimeVersion'. For example: 'python|3.10'"
       }
     },
     "packageUri": {
       "type": "string",
-      "defaultValue": "https://github.com/MrSharpBones/MDTI/raw/refs/heads/main/MDTI%20Actor%20Lookup/Function%20App/funcapp.zip"
+      "defaultValue": "https://github.com/MrSharpBones/MDTI/raw/refs/heads/main/MDTI%20Actor%20Lookup/Function%20App/funcapp.zip",
       "metadata": {
         "description": "The zip content url."
       }
