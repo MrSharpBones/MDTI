@@ -8,8 +8,8 @@ import azure.functions as func
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
-@app.function_name(name="mdtipdns")
-@app.route(route="mdtipdns")
+@app.function_name(name="MDTIActor")
+@app.route(route="MDTIActor")
 async def main_function(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
@@ -31,10 +31,9 @@ async def main_function(req: func.HttpRequest) -> func.HttpResponse:
     combined_results = await main(item)
     return func.HttpResponse(json.dumps(combined_results), status_code=200)
 
-#MDTI INFO
-client_id = os.getenv("MDTI_CLIENT_ID")
-client_secret = os.getenv("MDTI_CLIENT_SECRET")
-tenant_id = os.getenv("MDTI_TENANT_ID")
+client_id = "<MDTI_CLIENT_ID>"
+client_secret = "<MDTI_CLIENT_SECRET>"
+tenant_id = "<MDTI_TENANT_ID>"
 
 def get_access_token(client_id, client_secret, tenant_id):
     url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"
@@ -58,7 +57,7 @@ access_token = get_access_token(client_id, client_secret, tenant_id)
 headers = {"Authorization": f"Bearer {access_token}", "Content-Type": "application/json"}
 
 def list_grab(item):
-    services = f"https://graph.microsoft.com/beta/security/threatIntelligence/hosts/{item}/passivedns?$top=1500"
+    services = f"https://graph.microsoft.com/beta/security/threatIntelligence/hosts/{item}/passivedns?$top=1000"
     headers = {
         'Authorization': f'Bearer {access_token}'
     }
@@ -135,5 +134,3 @@ def condition(data):
 async def fetch_all(session, url, condition):
     # Implementation of fetch_all function
     pass
-
-# Azure Function HTTP trigger
