@@ -2,8 +2,8 @@
     "$schema":  "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion":  "1.0.0.0",
     "metadata":  {
-        "title":  "",
-        "description":  "",
+        "title":  "MTI Actor Lookup Logic App",
+        "description":  "Logic app to be used with the bundled function app to help iterate through infrastructure chains",
         "prerequisites":  "",
         "postDeployment":  [
         ],
