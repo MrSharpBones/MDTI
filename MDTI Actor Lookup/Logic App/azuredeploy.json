@@ -2,13 +2,13 @@
     "$schema":  "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion":  "1.0.0.0",
     "metadata":  {
-        "title":  "MTI Actor Lookup Logic App",
-        "description":  "Logic app to be used with the bundled function app to help iterate through infrastructure chains",
+        "title":  "MTI Threat Actor Lookup",
+        "description":  "To be deployed with the bundled function app to automate infrastructure chaining with the MTI API",
         "prerequisites":  "",
         "postDeployment":  [
         ],
         "prerequisitesDeployTemplateFile":  "",
-        "lastUpdateTime":  "",
+        "lastUpdateTime":  "2024-10-18T09:44:59Z",
         "entities":  [
         ],
         "tags":  [
@@ -18,13 +18,19 @@
             "armtemplate":  "Generated from https://github.com/Azure/Azure-Sentinel/tree/master/Tools/Playbook-ARM-Template-Generator"
         },
         "author":  {
-            "name":  ""
+            "name":  "Geoff Roote"
         }
     },
     "parameters":  {
         "PlaybookName":  {
             "defaultValue":  "MDTI-Actor-LookupV2",
             "type":  "string"
+        },
+        "Function App URL":  {
+            "type":  "String",
+            "metadata":  {
+                "description":  "Enter value for Function App URL"
+            }
         }
     },
     "variables":  {
@@ -46,6 +52,10 @@
                             "defaultValue":  {
                             },
                             "type":  "Object"
+                        },
+                        "Function App URL":  {
+                            "defaultValue":  "[parameters('Function App URL')]",
+                            "type":  "String"
                         }
                     },
                     "triggers":  {
@@ -575,7 +585,7 @@
                                 "Function_App_call":  {
                                     "type":  "Http",
                                     "inputs":  {
-                                        "uri":  "https://mdtiactor.azurewebsites.net/api/mdtia?item=@{items('For_each_3')?['Address']}\u0026code=@{body('Get_secret')?['value']}",
+                                        "uri":  "@{parameters('Function App URL')}item=@{items('For_each_3')?['Address']}\u0026code=@{body('Get_secret')?['value']}",
                                         "method":  "POST"
                                     },
                                     "operationOptions":  "DisableAsyncPattern"
@@ -663,12 +673,10 @@
                                     "expression":  {
                                         "and":  [
                                             {
-                                                "not":  {
-                                                    "equals":  [
-                                                        "@body('Function_App_call')",
-                                                        ""
-                                                    ]
-                                                }
+                                                "greater":  [
+                                                    "@length(body('Function_App_Call'))",
+                                                    2
+                                                ]
                                             },
                                             {
                                                 "not":  {
@@ -741,17 +749,83 @@
                                                                 }
                                                             },
                                                             {
-                                                                "not":  {
-                                                                    "equals":  [
-                                                                        "@items('For_each_7')",
-                                                                        ""
-                                                                    ]
-                                                                }
+                                                                "contains":  [
+                                                                    "@items('For_each_7')",
+                                                                    "Group"
+                                                                ]
                                                             }
                                                         ]
                                                     },
                                                     "type":  "If"
                                                 }
+                                            },
+                                            "type":  "Foreach"
+                                        },
+                                        "Create_HTML_table_2":  {
+                                            "runAfter":  {
+                                                "For_each_7":  [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "type":  "Table",
+                                            "inputs":  {
+                                                "from":  "@variables('groups')",
+                                                "format":  "HTML"
+                                            }
+                                        },
+                                        "Add_comment_to_incident_(V3)_4":  {
+                                            "runAfter":  {
+                                                "Create_HTML_table_2":  [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "type":  "ApiConnection",
+                                            "inputs":  {
+                                                "host":  {
+                                                    "connection":  {
+                                                        "name":  "@parameters('$connections')['azuresentinel']['connectionId']"
+                                                    }
+                                                },
+                                                "method":  "post",
+                                                "body":  {
+                                                    "incidentArmId":  "@triggerBody()?['object']?['id']",
+                                                    "message":  "\u003cp class=\"editor-paragraph\"\u003eActor Groups and associated domains:\u003c/p\u003e\u003cbr\u003e\u003cp class=\"editor-paragraph\"\u003e@{body('Create_HTML_table_2')}\u003c/p\u003e\u003cbr\u003e\u003cbr\u003e"
+                                                },
+                                                "path":  "/Incidents/Comment"
+                                            }
+                                        },
+                                        "For_each_9":  {
+                                            "foreach":  "@body('Select_1')",
+                                            "actions":  {
+                                                "Update_incident_1":  {
+                                                    "type":  "ApiConnection",
+                                                    "inputs":  {
+                                                        "host":  {
+                                                            "connection":  {
+                                                                "name":  "@parameters('$connections')['azuresentinel']['connectionId']"
+                                                            }
+                                                        },
+                                                        "method":  "put",
+                                                        "body":  {
+                                                            "incidentArmId":  "@triggerBody()?['object']?['id']",
+                                                            "tagsToAdd":  {
+                                                                "TagsToAdd":  [
+                                                                    {
+                                                                        "Tag":  "@item()['Group']"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "severity":  "High",
+                                                            "status":  "Active"
+                                                        },
+                                                        "path":  "/Incidents"
+                                                    }
+                                                }
+                                            },
+                                            "runAfter":  {
+                                                "Add_comment_to_incident_(V3)_4":  [
+                                                    "Succeeded"
+                                                ]
                                             },
                                             "type":  "Foreach"
                                         }
@@ -778,82 +852,14 @@
                                             {
                                                 "not":  {
                                                     "equals":  [
-                                                        "@body('Select_1')",
-                                                        ""
+                                                        "@length(variables('groups'))",
+                                                        0
                                                     ]
                                                 }
                                             }
                                         ]
                                     },
                                     "type":  "If"
-                                },
-                                "Create_HTML_table_2":  {
-                                    "runAfter":  {
-                                        "Condition_9":  [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type":  "Table",
-                                    "inputs":  {
-                                        "from":  "@variables('groups')",
-                                        "format":  "HTML"
-                                    }
-                                },
-                                "Add_comment_to_incident_(V3)_4":  {
-                                    "runAfter":  {
-                                        "Create_HTML_table_2":  [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type":  "ApiConnection",
-                                    "inputs":  {
-                                        "host":  {
-                                            "connection":  {
-                                                "name":  "@parameters('$connections')['azuresentinel']['connectionId']"
-                                            }
-                                        },
-                                        "method":  "post",
-                                        "body":  {
-                                            "incidentArmId":  "@triggerBody()?['object']?['id']",
-                                            "message":  "\u003cp class=\"editor-paragraph\"\u003eActor Groups and associated domains:\u003c/p\u003e\u003cbr\u003e\u003cp class=\"editor-paragraph\"\u003e@{body('Create_HTML_table_2')}\u003c/p\u003e\u003cbr\u003e\u003cbr\u003e"
-                                        },
-                                        "path":  "/Incidents/Comment"
-                                    }
-                                },
-                                "For_each_9":  {
-                                    "foreach":  "@body('Select_1')",
-                                    "actions":  {
-                                        "Update_incident_1":  {
-                                            "type":  "ApiConnection",
-                                            "inputs":  {
-                                                "host":  {
-                                                    "connection":  {
-                                                        "name":  "@parameters('$connections')['azuresentinel']['connectionId']"
-                                                    }
-                                                },
-                                                "method":  "put",
-                                                "body":  {
-                                                    "incidentArmId":  "@triggerBody()?['object']?['id']",
-                                                    "tagsToAdd":  {
-                                                        "TagsToAdd":  [
-                                                            {
-                                                                "Tag":  "@item()['Group']"
-                                                            }
-                                                        ]
-                                                    },
-                                                    "severity":  "High",
-                                                    "status":  "Active"
-                                                },
-                                                "path":  "/Incidents"
-                                            }
-                                        }
-                                    },
-                                    "runAfter":  {
-                                        "Add_comment_to_incident_(V3)_4":  [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type":  "Foreach"
                                 }
                             },
                             "runAfter":  {
@@ -874,7 +880,7 @@
                                 "Function_App_call_1":  {
                                     "type":  "Http",
                                     "inputs":  {
-                                        "uri":  "https://mdtiactor.azurewebsites.net/api/mdtia?item=@{item()?['HostName']}.@{item()?['DnsDomain']}\u0026code=@{body('Get_secret')?['value']}",
+                                        "uri":  "@{parameters('Function App URL')}item=@{item()?['HostName']}.@{item()?['DnsDomain']}\u0026code=@{body('Get_secret')?['value']}",
                                         "method":  "POST"
                                     },
                                     "operationOptions":  "DisableAsyncPattern"
@@ -970,12 +976,10 @@
                                                 }
                                             },
                                             {
-                                                "not":  {
-                                                    "equals":  [
-                                                        "@body('Function_App_call_1')",
-                                                        ""
-                                                    ]
-                                                }
+                                                "greater":  [
+                                                    "@length(body('Function_App_Call_1'))",
+                                                    2
+                                                ]
                                             }
                                         ]
                                     },
@@ -1040,17 +1044,83 @@
                                                                 }
                                                             },
                                                             {
-                                                                "not":  {
-                                                                    "equals":  [
-                                                                        "@items('For_each_8')",
-                                                                        ""
-                                                                    ]
-                                                                }
+                                                                "contains":  [
+                                                                    "@items('For_each_8')",
+                                                                    "Group"
+                                                                ]
                                                             }
                                                         ]
                                                     },
                                                     "type":  "If"
                                                 }
+                                            },
+                                            "type":  "Foreach"
+                                        },
+                                        "Create_HTML_table_1":  {
+                                            "runAfter":  {
+                                                "For_each_8":  [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "type":  "Table",
+                                            "inputs":  {
+                                                "from":  "@variables('hostpivot')",
+                                                "format":  "HTML"
+                                            }
+                                        },
+                                        "Add_comment_to_incident_(V3)_6":  {
+                                            "runAfter":  {
+                                                "Create_HTML_table_1":  [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "type":  "ApiConnection",
+                                            "inputs":  {
+                                                "host":  {
+                                                    "connection":  {
+                                                        "name":  "@parameters('$connections')['azuresentinel']['connectionId']"
+                                                    }
+                                                },
+                                                "method":  "post",
+                                                "body":  {
+                                                    "incidentArmId":  "@triggerBody()?['object']?['id']",
+                                                    "message":  "\u003cp class=\"editor-paragraph\"\u003eActor Groups and associated domains:\u003c/p\u003e\u003cbr\u003e\u003cp class=\"editor-paragraph\"\u003e@{body('Create_HTML_table_1')}\u003c/p\u003e"
+                                                },
+                                                "path":  "/Incidents/Comment"
+                                            }
+                                        },
+                                        "For_each_10":  {
+                                            "foreach":  "@body('Select')",
+                                            "actions":  {
+                                                "Update_incident_3":  {
+                                                    "type":  "ApiConnection",
+                                                    "inputs":  {
+                                                        "host":  {
+                                                            "connection":  {
+                                                                "name":  "@parameters('$connections')['azuresentinel']['connectionId']"
+                                                            }
+                                                        },
+                                                        "method":  "put",
+                                                        "body":  {
+                                                            "incidentArmId":  "@triggerBody()?['object']?['id']",
+                                                            "tagsToAdd":  {
+                                                                "TagsToAdd":  [
+                                                                    {
+                                                                        "Tag":  "@item()['Group']"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "severity":  "High",
+                                                            "status":  "Active"
+                                                        },
+                                                        "path":  "/Incidents"
+                                                    }
+                                                }
+                                            },
+                                            "runAfter":  {
+                                                "Add_comment_to_incident_(V3)_6":  [
+                                                    "Succeeded"
+                                                ]
                                             },
                                             "type":  "Foreach"
                                         }
@@ -1077,72 +1147,14 @@
                                             {
                                                 "not":  {
                                                     "equals":  [
-                                                        "@body('Select')",
-                                                        ""
+                                                        "@length(variables('hostpivot'))",
+                                                        0
                                                     ]
                                                 }
                                             }
                                         ]
                                     },
                                     "type":  "If"
-                                },
-                                "Create_HTML_table_1":  {
-                                    "runAfter":  {
-                                        "Condition_8":  [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type":  "Table",
-                                    "inputs":  {
-                                        "from":  "@variables('hostpivot')",
-                                        "format":  "HTML"
-                                    }
-                                },
-                                "Add_comment_to_incident_(V3)_6":  {
-                                    "runAfter":  {
-                                        "Create_HTML_table_1":  [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type":  "ApiConnection",
-                                    "inputs":  {
-                                        "host":  {
-                                            "connection":  {
-                                                "name":  "@parameters('$connections')['azuresentinel']['connectionId']"
-                                            }
-                                        },
-                                        "method":  "post",
-                                        "body":  {
-                                            "incidentArmId":  "@triggerBody()?['object']?['id']",
-                                            "message":  "\u003cp class=\"editor-paragraph\"\u003eActor Groups and associated domains:\u003c/p\u003e\u003cbr\u003e\u003cp class=\"editor-paragraph\"\u003e@{body('Create_HTML_table_1')}\u003c/p\u003e"
-                                        },
-                                        "path":  "/Incidents/Comment"
-                                    }
-                                },
-                                "Update_incident_3":  {
-                                    "runAfter":  {
-                                        "Add_comment_to_incident_(V3)_6":  [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type":  "ApiConnection",
-                                    "inputs":  {
-                                        "host":  {
-                                            "connection":  {
-                                                "name":  "@parameters('$connections')['azuresentinel']['connectionId']"
-                                            }
-                                        },
-                                        "method":  "put",
-                                        "body":  {
-                                            "incidentArmId":  "@triggerBody()?['object']?['id']",
-                                            "tagsToAdd":  {
-                                                "TagsToAdd":  "@variables('hostpivot')"
-                                            },
-                                            "severity":  "High",
-                                            "status":  "Active"
-                                        },
-                                        "path":  "/Incidents"
-                                    }
                                 }
                             },
                             "runAfter":  {
